@@ -9,9 +9,9 @@ import torch
 ROOT = Path(__file__).resolve().parent
 
 CONFIG = {
-    "text_path": ROOT / "data" / "TinyStoriesV2-GPT4-train.txt",
-    "val_text_path": ROOT / "data" / "TinyStoriesV2-GPT4-valid.txt",
-    "prepared_data_dir": ROOT / "prepared_data",
+    "text_path": Path("/root/autodl-tmp/TinyStoriesV2-GPT4-train.txt"),
+    "val_text_path": Path("/root/autodl-tmp/TinyStoriesV2-GPT4-valid.txt"),
+    "prepared_data_dir": Path("/root/autodl-tmp/prepared_data"),
     "use_prepared_data": True,
     "vocab_size": 512,
     "special_tokens": ["<|endoftext|>"],
@@ -33,7 +33,7 @@ CONFIG = {
     "cosine_cycle_iters": 20000,
     "weight_decay": 0.01,
     "max_l2_norm": 1.0,
-    "checkpoint_dir": ROOT / "checkpoints_5m",
+    "checkpoint_dir": Path("/root/autodl-tmp/checkpoints_5m"),
     "checkpoint_interval": 1000,
     "log_path": None,
 }

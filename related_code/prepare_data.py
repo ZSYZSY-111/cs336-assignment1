@@ -14,9 +14,9 @@ ROOT = Path(__file__).resolve().parent
 
 DEFAULT_TRAIN_TEXT_NAME = "TinyStoriesV2-GPT4-train.txt"
 DEFAULT_VAL_TEXT_NAME = "TinyStoriesV2-GPT4-valid.txt"
-DEFAULT_TRAIN_TEXT = ROOT / DEFAULT_TRAIN_TEXT_NAME
-DEFAULT_VAL_TEXT = ROOT / DEFAULT_VAL_TEXT_NAME
-DEFAULT_OUT_DIR = ROOT / "prepared_data"
+DEFAULT_TRAIN_TEXT = Path("/root/autodl-tmp") / DEFAULT_TRAIN_TEXT_NAME
+DEFAULT_VAL_TEXT = Path("/root/autodl-tmp") / DEFAULT_VAL_TEXT_NAME
+DEFAULT_OUT_DIR = Path("/root/autodl-tmp/prepared_data")
 DEFAULT_SPECIAL_TOKENS = ["<|endoftext|>"]
 
 
