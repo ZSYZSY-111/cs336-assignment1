@@ -248,26 +248,6 @@ pytest
 uv run pytest
 ```
 
-### 数据准备
-
-将数据集放置在以下位置之一：
-
-```
-# 选项 1：AutoDL 路径（默认）
-/root/autodl-tmp/TinyStoriesV2-GPT4-train.txt
-/root/autodl-tmp/TinyStoriesV2-GPT4-valid.txt
-
-# 选项 2：项目 data 目录
-assignment1-basics/data/TinyStoriesV2-GPT4-train.txt
-assignment1-basics/data/TinyStoriesV2-GPT4-valid.txt
-
-# 选项 3：自定义路径
-python prepare_data.py \
-  --train-text /path/to/train.txt \
-  --val-text /path/to/val.txt \
-  --out-dir /path/to/output
-```
-
 ### 硬件要求
 
 - **BPE 训练**：CPU 密集，建议多核（8+ cores）
