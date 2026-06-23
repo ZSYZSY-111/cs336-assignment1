@@ -21,6 +21,12 @@
 - ✅ 完整的训练日志、loss 曲线和性能指标
 - ✅ 文本生成和模型推理
 
+### 训练曲线
+
+下图展示了模型在前 10000 个训练 step 中的 loss 变化。可以看到 train loss 和 validation loss 快速下降并逐渐收敛，说明从 tokenizer、数据缓存到 Transformer 训练的完整流程能够稳定工作。
+
+![Training Loss](assets/train_log_loss.png)
+
 ---
 
 ## 🔤 BPE Tokenizer
