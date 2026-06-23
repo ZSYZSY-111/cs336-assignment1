@@ -2,6 +2,16 @@
 
 > Stanford CS336: Language Modeling from Scratch
 
+## 项目亮点
+
+- 从零实现完整的 decoder-only Transformer 训练与推理栈
+- 手写实现 Linear、Embedding、ROPE、RMSNorm、SwiGLU、MultiHeadAttention、AdamW 等核心模块
+- 实现 Grouped-Query Attention (GQA) 架构，并与 MHA baseline 进行对比实验
+- 三版本 BPE tokenizer：从朴素实现到堆优化，再到多进程并行（3.4x 加速）
+- 在 TinyStories 数据集上训练得到可用模型，并生成连贯英文文本
+
+---
+
 ## 项目总览
 
 这个项目实现了从零开始构建语言模型的完整流程，包括字节级 BPE tokenizer、decoder-only Transformer 架构、以及完整的训练和评估pipeline。项目特别关注两个方向的探索：
@@ -255,45 +265,6 @@ uv run pytest
 - **推理生成**：CPU/GPU 均可
 
 训练脚本默认使用 `device="cuda"`，本地调试时需修改配置。
-
----
-
-## 实验结果
-
-### BPE 性能
-
-| 指标 | V2 (优化单进程) | V3 (并行) | 加速比 |
-|------|----------------|-----------|--------|
-| TinyStories (100MB) | ~8s | ~3s | 2.7x |
-| OpenWebText (1.2GB) | ~120s | ~35s | 3.4x |
-| 结果一致性 | ✅ | ✅ | - |
-
-### MHA vs GQA
-
-| 指标 | MHA | GQA | 提升 |
-|------|-----|-----|------|
-| Train Loss (final) | 测试中 | 测试中 | - |
-| Val Loss (final) | 测试中 | 测试中 | - |
-| Tokens/sec | 测试中 | 测试中 | ~18% |
-| Peak GPU Memory | 测试中 | 测试中 | ~12% |
-| 参数量 | ~5M | ~4.8M | -4% |
-
-![Loss Curves](related_code/mha_vs_gqa_val_loss.png)
-
----
-
-## 关键学习点
-
-### BPE Tokenizer
-- ✅ 理解 byte-level tokenization 的必要性（处理任意 Unicode）
-- ✅ 掌握算法优化的层次：数据结构 → 算法策略 → 系统并行
-- ✅ 权衡正确性与性能（如何在并行化中保证结果一致）
-
-### Transformer
-- ✅ 手写所有组件，深入理解每个细节的作用
-- ✅ 现代架构设计：ROPE、RMSNorm、SwiGLU 的优势
-- ✅ GQA 的核心思想：在效果与效率间找平衡点
-- ✅ 训练的工程细节：gradient clipping、warmup、logging
 
 ---
 
