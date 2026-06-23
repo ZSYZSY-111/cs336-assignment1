@@ -69,7 +69,7 @@ python benchmark_bpe.py --input data/TinyStoriesV2-GPT4-train.txt
 
 本项目实现了一个完整的 decoder-only Transformer，所有核心组件均从零手写，不依赖高层封装。
 
-![Transformer Architecture](images/transformer_architecture.png)
+![Transformer Architecture](assets/transformer_architecture.png)
 *Transformer 架构：包含 ROPE、RMSNorm、SwiGLU 等现代组件*
 
 ### 架构组件
