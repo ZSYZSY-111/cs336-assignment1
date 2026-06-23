@@ -161,3 +161,27 @@ cython_debug/
 
 .ruff_cache/
 *.zip
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ML Training artifacts
+checkpoints/
+runs/
+outputs/
+logs/
+wandb/
+*.ckpt
+*.pth
+*.pt
+*.safetensors
+
+# Data files
+data/
+datasets/
+*.bin
+*.idx
+*.jsonl
+*.parquet
