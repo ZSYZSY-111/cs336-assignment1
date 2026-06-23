@@ -6,7 +6,8 @@ from pathlib import Path
 
 import numpy as np
 
-from train_bpe_upgrade import encode, run_train_bpe
+from train_bpe_upgrade import encode
+from train_bpe_parallel import run_train_bpe
 
 
 ROOT = Path(__file__).resolve().parent
