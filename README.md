@@ -9,8 +9,8 @@
 - **BPE 算法优化**：从朴素实现到多进程并行，探索tokenization的性能优化
 - **Attention 机制对比**：Multi-Head Attention (MHA) vs Grouped-Query Attention (GQA) 的效率与效果权衡
 
-![Project Pipeline](images/project_pipeline.png)
-*完整的项目流程：从原始文本到训练好的语言模型*
+![Experiment Workflow](assets/experiment_workflow.png)
+*Complete experiment workflow: from raw text data to tokenizer training, Transformer training, MHA/GQA comparison, and text generation.*
 
 ### 核心特性
 
