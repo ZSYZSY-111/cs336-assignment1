@@ -2,7 +2,7 @@
 
 > Stanford CS336: Language Modeling from Scratch
 
-## 📋 项目总览
+## 项目总览
 
 这个项目实现了从零开始构建语言模型的完整流程，包括字节级 BPE tokenizer、decoder-only Transformer 架构、以及完整的训练和评估pipeline。项目特别关注两个方向的探索：
 
@@ -29,7 +29,7 @@
 
 ---
 
-## 🔤 BPE Tokenizer
+## BPE Tokenizer
 
 Byte Pair Encoding (BPE) 是现代语言模型的核心组件。本项目实现了三个版本的 BPE，展示了从算法到系统层面的优化思路。
 
@@ -71,7 +71,7 @@ python benchmark_bpe.py --input data/TinyStoriesV2-GPT4-train.txt
 
 ---
 
-## 🤖 Transformer 语言模型
+## Transformer 语言模型
 
 本项目实现了一个完整的 decoder-only Transformer，所有核心组件均从零手写，不依赖高层封装。
 
@@ -143,7 +143,7 @@ python compare_mha_gqa.py --plot
 
 ---
 
-## 📊 实验流程
+## 实验流程
 
 ### 完整 Pipeline
 
@@ -202,7 +202,7 @@ python generate_text.py \
 
 ---
 
-## 📁 项目结构
+## 项目结构
 
 ```
 assignment1-basics/
@@ -232,7 +232,7 @@ assignment1-basics/
 
 ---
 
-## 🔧 环境配置
+## 环境配置
 
 ### 依赖安装
 
@@ -258,7 +258,7 @@ uv run pytest
 
 ---
 
-## 📈 实验结果
+## 实验结果
 
 ### BPE 性能
 
@@ -282,7 +282,7 @@ uv run pytest
 
 ---
 
-## 💡 关键学习点
+## 关键学习点
 
 ### BPE Tokenizer
 - ✅ 理解 byte-level tokenization 的必要性（处理任意 Unicode）
@@ -297,7 +297,7 @@ uv run pytest
 
 ---
 
-## 📝 复现注意事项
+## 复现注意事项
 
 1. **路径配置**：`train_model.py` 和 `train_model_gqa.py` 默认路径是 `/root/autodl-tmp/`，本地运行需修改
 2. **公平对比**：MHA/GQA 对比必须在同一硬件、相同随机种子下进行
@@ -307,7 +307,7 @@ uv run pytest
 
 ---
 
-## 🔗 参考资源
+## 参考资源
 
 - [CS336 Course Page](https://stanford-cs336.github.io/spring2024/)
 - [BPE Original Paper](https://arxiv.org/abs/1508.07909)
@@ -317,6 +317,6 @@ uv run pytest
 
 ---
 
-## 📄 License
+## License
 
 本项目遵循 MIT License。作业框架来自 Stanford CS336。
