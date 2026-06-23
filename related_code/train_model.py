@@ -1,6 +1,7 @@
 from pathlib import Path
 import csv
 import pickle
+import time
 
 import numpy as np
 import torch
@@ -147,10 +148,24 @@ def main():
     )
 
     print(f"logging training metrics to {log_path}", flush=True)
+
+    use_cuda = torch.cuda.is_available() and str(config["device"]).startswith("cuda")
+    if use_cuda:
+        torch.cuda.reset_peak_memory_stats()
+
     with log_path.open("w", newline="") as log_file:
         log_writer = csv.DictWriter(
             log_file,
-            fieldnames=["iteration", "lr", "step_loss", "train_loss", "val_loss"],
+            fieldnames=[
+                "iteration",
+                "lr",
+                "step_loss",
+                "train_loss",
+                "val_loss",
+                "ms_per_step",
+                "tokens_per_sec",
+                "peak_mem_mb",
+            ],
         )
         log_writer.writeheader()
 
@@ -187,6 +202,10 @@ def main():
                 config["device"],
             )
 
+            if use_cuda:
+                torch.cuda.synchronize()
+            step_start = time.perf_counter()
+
             optimizer.zero_grad()
             logits = model(x)
             loss = cross_entropy(logits.reshape(-1, len(vocab)), y.reshape(-1))
@@ -194,8 +213,23 @@ def main():
             gradient_clipping(model.parameters(), max_l2_norm=config["max_l2_norm"])
             optimizer.step()
 
+            if use_cuda:
+                torch.cuda.synchronize()
+            step_time = time.perf_counter() - step_start
+
+            ms_per_step = step_time * 1000.0
+            tokens_per_step = config["batch_size"] * config["context_length"]
+            tokens_per_sec = tokens_per_step / step_time if step_time > 0 else 0.0
+            peak_mem_mb = (
+                torch.cuda.max_memory_allocated() / (1024**2) if use_cuda else 0.0
+            )
+
             step_loss = loss.item()
-            print(f"iter {it:02d} | lr {lr:.6f} | loss {step_loss:.4f}")
+            print(
+                f"iter {it:02d} | lr {lr:.6f} | loss {step_loss:.4f} | "
+                f"{ms_per_step:.1f}ms/step | {tokens_per_sec / 1000:.0f}k tok/s | "
+                f"mem {peak_mem_mb:.0f}MB"
+            )
             log_writer.writerow(
                 {
                     "iteration": it,
@@ -203,6 +237,9 @@ def main():
                     "step_loss": step_loss,
                     "train_loss": "" if eval_losses is None else eval_losses["train"],
                     "val_loss": "" if eval_losses is None else eval_losses["val"],
+                    "ms_per_step": f"{ms_per_step:.3f}",
+                    "tokens_per_sec": f"{tokens_per_sec:.1f}",
+                    "peak_mem_mb": f"{peak_mem_mb:.2f}",
                 }
             )
             log_file.flush()
@@ -223,6 +260,10 @@ def main():
         config["eval_iters"],
     )
     print(f"final | train {losses['train']:.4f} | val {losses['val']:.4f}")
+
+    if use_cuda:
+        peak_mem_mb = torch.cuda.max_memory_allocated() / (1024**2)
+        print(f"peak GPU memory: {peak_mem_mb:.2f} MB")
 
     final_checkpoint_path = config["checkpoint_dir"] / "tiny_final.pt"
     save_checkpoint(model, optimizer, config["num_iters"], final_checkpoint_path)
