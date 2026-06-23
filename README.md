@@ -27,7 +27,7 @@
 
 Byte Pair Encoding (BPE) 是现代语言模型的核心组件。本项目实现了三个版本的 BPE，展示了从算法到系统层面的优化思路。
 
-![BPE Illustration](images/bpe_illustration.png)
+![BPE Illustration](assets/bpe_illustration.png)
 *BPE 算法流程：从字符到子词的迭代合并过程*
 
 ### 三版本演进
