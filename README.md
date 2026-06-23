@@ -24,12 +24,11 @@
 
 ### 核心特性
 
-- ✅ 三版本 BPE tokenizer 实现与性能对比
-- ✅ 手写 Transformer 组件（Embedding、ROPE、RMSNorm、SwiGLU）
-- ✅ 自定义 AdamW 优化器和学习率调度
-- ✅ MHA vs GQA 架构的详细对比实验
-- ✅ 完整的训练日志、loss 曲线和性能指标
-- ✅ 文本生成和模型推理
+- 三版本 BPE tokenizer 实现与性能对比
+- 手写 Transformer 组件（Embedding、ROPE、RMSNorm、SwiGLU）
+- 自定义 AdamW 优化器和学习率调度
+- 完整的训练日志、loss 曲线和性能指标
+- 文本生成和模型推理
 
 ### 训练曲线
 
