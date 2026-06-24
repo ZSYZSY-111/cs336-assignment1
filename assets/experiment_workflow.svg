@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="980" viewBox="0 0 1200 980" role="img" aria-labelledby="title desc">
+  <title id="title">Language Model Experiment Pipeline</title>
+  <desc id="desc">A clean research-style pipeline diagram showing raw text, BPE tokenizer, token cache, Transformer training with MHA or GQA, logs and checkpoints, evaluation, and generated text.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 12 12" refX="10.2" refY="6" markerWidth="7" markerHeight="7" orient="auto" markerUnits="strokeWidth">
+      <path d="M 2 2 L 10 6 L 2 10" fill="none" stroke="#555555" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <style>
+      .bg { fill: #ffffff; }
+      .box { stroke: #555555; stroke-width: 2.4; }
+      .group { fill: #f7f7f7; stroke: #555555; stroke-width: 2.4; }
+      .data { fill: #e9f1f7; }
+      .token { fill: #e9f3e5; }
+      .cache { fill: #fbf2d8; }
+      .model { fill: #faecd9; }
+      .eval { fill: #e9e6f3; }
+      .out { fill: #f5e7e7; }
+      .line { fill: none; stroke: #555555; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrow); }
+      .thin { fill: none; stroke: #555555; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrow); }
+      .note-line { fill: none; stroke: #666666; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+      text {
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+        fill: #222222;
+      }
+      .title { font-size: 30px; font-weight: 500; }
+      .caption { font-size: 18px; font-weight: 360; }
+      .label { font-size: 23px; font-weight: 480; }
+      .sub { font-size: 17px; font-weight: 350; }
+      .mono { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; font-size: 15px; font-weight: 380; }
+      .tiny { font-size: 15px; font-weight: 350; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1200" height="980"/>
+
+  <text x="600" y="54" text-anchor="middle" class="title">Language Model Experiment Pipeline</text>
+
+  <!-- Input -->
+  <text x="600" y="118" text-anchor="middle" class="caption">Input Corpus</text>
+  <rect class="box data" x="430" y="137" width="340" height="76" rx="9"/>
+  <text x="600" y="168" text-anchor="middle" class="label">Raw Text Data</text>
+  <text x="600" y="194" text-anchor="middle" class="mono">TinyStories / OpenWebText</text>
+
+  <!-- Preprocessing group -->
+  <rect class="group" x="335" y="292" width="530" height="246" rx="18"/>
+  <text x="910" y="419" class="caption">Preprocessing</text>
+
+  <rect class="box token" x="430" y="322" width="340" height="76" rx="9"/>
+  <text x="600" y="353" text-anchor="middle" class="label">BPE Tokenizer</text>
+  <text x="600" y="379" text-anchor="middle" class="sub">train merges and vocabulary</text>
+
+  <rect class="box cache" x="430" y="442" width="340" height="76" rx="9"/>
+  <text x="600" y="473" text-anchor="middle" class="label">Tokenized Dataset</text>
+  <text x="600" y="499" text-anchor="middle" class="mono">tokenizer.pkl + train/val .npy</text>
+
+  <path class="line" d="M600 213 L600 312"/>
+  <path class="line" d="M600 398 L600 432"/>
+
+  <!-- Training group -->
+  <rect class="group" x="310" y="604" width="580" height="212" rx="18"/>
+  <text x="913" y="710" class="caption">Training</text>
+
+  <rect class="box model" x="430" y="635" width="340" height="78" rx="9"/>
+  <text x="600" y="666" text-anchor="middle" class="label">Transformer LM</text>
+  <text x="600" y="692" text-anchor="middle" class="sub">MHA / GQA training runs</text>
+
+  <rect class="box eval" x="430" y="736" width="340" height="58" rx="9"/>
+  <text x="600" y="772" text-anchor="middle" class="mono">train_model.py</text>
+
+  <path class="line" d="M600 518 L600 625"/>
+  <path class="line" d="M600 713 L600 726"/>
+
+  <!-- Output branches -->
+  <rect class="box cache" x="124" y="848" width="258" height="74" rx="9"/>
+  <text x="253" y="879" text-anchor="middle" class="label">Checkpoints</text>
+  <text x="253" y="904" text-anchor="middle" class="mono">tiny_final.pt</text>
+
+  <rect class="box eval" x="471" y="848" width="258" height="74" rx="9"/>
+  <text x="600" y="879" text-anchor="middle" class="label">Experiment Logs</text>
+  <text x="600" y="904" text-anchor="middle" class="sub">loss, throughput, memory</text>
+
+  <rect class="box out" x="818" y="848" width="258" height="74" rx="9"/>
+  <text x="947" y="879" text-anchor="middle" class="label">Generated Text</text>
+  <text x="947" y="904" text-anchor="middle" class="mono">generate_text.py</text>
+
+  <path class="line" d="M600 816 L600 838"/>
+  <path class="thin" d="M600 816 C560 835 406 833 253 839"/>
+  <path class="thin" d="M600 816 C640 835 794 833 947 839"/>
+
+  <!-- Small side annotations, not separate mechanisms -->
+  <text x="218" y="358" text-anchor="middle" class="caption">BPE variants</text>
+  <text x="218" y="384" text-anchor="middle" class="tiny">basic, optimized, parallel</text>
+  <path class="note-line" d="M300 375 C336 372 366 364 420 360"/>
+
+  <text x="995" y="674" text-anchor="middle" class="caption">Architecture variants</text>
+  <text x="995" y="700" text-anchor="middle" class="tiny">MHA baseline / GQA variant</text>
+  <path class="note-line" d="M878 692 C842 690 820 682 780 674"/>
+
+</svg>

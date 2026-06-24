@@ -9,6 +9,7 @@ import torch
 
 from train_bpe_upgrade import decode, encode, run_train_bpe
 from train_transformer import TransformerLM
+from train_transformer_gqa import TransformerLM as TransformerLM_GQA
 
 
 ROOT = Path(__file__).resolve().parent
@@ -74,7 +75,7 @@ def choose_next_token(
 
 @torch.no_grad()
 def generate(
-    model: TransformerLM,
+    model,
     input_ids: list[int],
     max_new_tokens: int,
     context_length: int,
@@ -83,18 +84,22 @@ def generate(
     stop_token_id: int | None,
     device: torch.device,
 ) -> list[int]:
-    generated = torch.tensor([input_ids], dtype=torch.long, device=device)
+    # prefill the prompt once, then decode one token at a time reusing the KV-cache
+    generated = list(input_ids)
+    prompt = torch.tensor([input_ids], dtype=torch.long, device=device)
+    logits, kvs = model(prompt, use_cache=True)
+    logits = logits[:, -1, :]
 
     for _ in range(max_new_tokens):
-        context = generated[:, -context_length:]
-        logits = model(context)[:, -1, :]
         next_token = choose_next_token(logits, temperature=temperature, top_k=top_k)
-        generated = torch.cat([generated, next_token], dim=1)
-
-        if stop_token_id is not None and next_token.item() == stop_token_id:
+        token_id = next_token.item()
+        generated.append(token_id)
+        if stop_token_id is not None and token_id == stop_token_id:
             break
+        logits, kvs = model(next_token, past_kvs=kvs, use_cache=True)
+        logits = logits[:, -1, :]
 
-    return generated[0].tolist()
+    return generated
 
 
 def parse_args() -> argparse.Namespace:
@@ -106,6 +111,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-new-tokens", type=int, default=100)
     parser.add_argument("--context-length", type=int, default=256)
     parser.add_argument("--num-heads", type=int, default=4)
+    parser.add_argument("--model-type", type=str, default="mha", choices=["mha", "gqa"])
+    parser.add_argument("--num-kv-heads", type=int, default=2, help="only used when --model-type gqa")
     parser.add_argument("--rope-theta", type=float, default=10000.0)
     parser.add_argument("--temperature", type=float, default=0.8)
     parser.add_argument("--top-k", type=int, default=50)
@@ -153,17 +160,31 @@ def main() -> None:
         token_to_id = {token: token_id for token_id, token in vocab.items()}
         stop_token_id = token_to_id.get(special_tokens[0].encode("utf-8"))
 
-    model = TransformerLM(
-        vocab_size=config["vocab_size"],
-        context_length=args.context_length,
-        d_model=config["d_model"],
-        num_layers=config["num_layers"],
-        num_heads=args.num_heads,
-        d_ff=config["d_ff"],
-        rope_theta=args.rope_theta,
-        device=device,
-        dtype=torch.float32,
-    )
+    if args.model_type == "gqa":
+        model = TransformerLM_GQA(
+            vocab_size=config["vocab_size"],
+            context_length=args.context_length,
+            d_model=config["d_model"],
+            num_layers=config["num_layers"],
+            num_heads=args.num_heads,
+            num_kv_heads=args.num_kv_heads,
+            d_ff=config["d_ff"],
+            rope_theta=args.rope_theta,
+            device=device,
+            dtype=torch.float32,
+        )
+    else:
+        model = TransformerLM(
+            vocab_size=config["vocab_size"],
+            context_length=args.context_length,
+            d_model=config["d_model"],
+            num_layers=config["num_layers"],
+            num_heads=args.num_heads,
+            d_ff=config["d_ff"],
+            rope_theta=args.rope_theta,
+            device=device,
+            dtype=torch.float32,
+        )
     model.load_state_dict(state_dict)
     model.eval()
 
